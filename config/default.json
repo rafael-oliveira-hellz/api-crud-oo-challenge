@@ -1,16 +1,16 @@
 {
   "App": {
-    "port": "APP_PORT",
+    "port": 4000,
     "database": {
-      "mongoUrl": "MONGODB_URL"
+      "mongoUrl": "mongodb://localhost:27017/jobs-api"
+    },
+    "auth": {
+      "key": "some-key",
+      "tokenExpiresIn": "20000000"
     },
     "logger": {
       "enabled": true,
       "level": "info"
-    },
-    "auth": {
-      "key": "ENCRYPTION_DATA",
-      "tokenExpiresIn": "TOKEN_EXPIRES_IN"
     }
   }
 }

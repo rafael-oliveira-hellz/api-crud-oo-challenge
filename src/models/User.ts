@@ -1,14 +1,12 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import AuthService from '@src/services/auth';
-import logger from '@src/utils/logger';
+import logger from '@src/logger';
 
 export interface User {
   _id?: string;
   name: string;
   email: string;
   password: string;
-  avatar?: string;
-  role?: string;
 }
 
 export enum CUSTOM_VALIDATION {
@@ -33,16 +31,6 @@ const NewUser = mongoose.model<UserModel>(
       password: {
         type: String,
         required: true,
-      },
-      avatar: {
-        type: String,
-        required: false,
-      },
-      role: {
-        type: String,
-        required: false,
-        enum: ['user', 'admin'],
-        default: 'user',
       },
     },
     {

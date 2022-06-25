@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import mongoose from 'mongoose';
-import { CUSTOM_VALIDATION } from '@src/models/User';
-import logger from '@src/utils/logger';
+import { CUSTOM_VALIDATION } from '@src/models/user';
+import logger from '@src/logger';
 import ApiError, { APIError } from '@src/utils/errors/api-error';
 
 export abstract class BaseController {

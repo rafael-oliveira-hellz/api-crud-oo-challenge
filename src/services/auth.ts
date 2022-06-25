@@ -9,7 +9,7 @@ export interface JwtToken {
 export default class AuthService {
   public static async hashPassword(
     password: string,
-    salt = 12
+    salt = 10
   ): Promise<string> {
     return await bcrypt.hash(password, salt);
   }

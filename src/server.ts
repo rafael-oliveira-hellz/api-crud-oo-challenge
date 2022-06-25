@@ -8,27 +8,29 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
-import * as database from '@src/database/_dbConnection';
-import logger from '@src/utils/logger';
-import swaggerFile from '@src/swagger/swagger_documentation.json';
-
+import * as database from '@src/database';
+import { UsersController } from './controllers/auth';
+import logger from './logger';
+import apiSchema from './api-schema.json';
 import { apiErrorValidator } from './middlewares/api-error-validator';
-
-/** Controllers */
-import { AuthController } from '@src/controllers/auth';
-import JobsController from '@src/controllers/jobs';
-import UsersController from '@src/controllers/users';
 
 export class SetupServer extends Server {
   private server?: http.Server;
-
-  constructor(private port = 3335) {
+  /*
+   * same as this.port = port, declaring as private here will
+   * add the port variable to the SetupServer instance
+   */
+  constructor(private port = 3000) {
     super();
   }
 
+  /*
+   * We use a different method to init instead of using the constructor
+   * this way we allow the server to be used in tests and normal initialization
+   */
   public async init(): Promise<void> {
     this.setupExpress();
-    await this.docSetup();
+    await this.docsSetup();
     this.setupControllers();
     await this.databaseSetup();
     this.setupErrorHandlers();
@@ -48,22 +50,20 @@ export class SetupServer extends Server {
     );
   }
 
-  private async docSetup(): Promise<void> {
-    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+  private async docsSetup(): Promise<void> {
+    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(apiSchema));
     this.app.use(
       OpenApiValidator.middleware({
-        apiSpec: swaggerFile as OpenAPIV3.Document,
-        validateRequests: true, //will be implemented in step2
-        validateResponses: true, //will be implemented in step2
+        apiSpec: apiSchema as OpenAPIV3.Document,
+        validateRequests: true,
+        validateResponses: true,
       })
     );
   }
 
   private setupControllers(): void {
-    const authController = new AuthController();
-    const jobsController = new JobsController();
     const usersController = new UsersController();
-    this.addControllers([authController, jobsController, usersController]);
+    this.addControllers([usersController]);
   }
 
   private setupErrorHandlers(): void {

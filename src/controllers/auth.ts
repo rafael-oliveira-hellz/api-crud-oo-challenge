@@ -1,12 +1,12 @@
 import { Controller, Post, Get, Middleware } from '@overnightjs/core';
 import { Response, Request } from 'express';
-import { User } from '@src/models/User';
+import { User } from '@src/models/user';
 import AuthService from '@src/services/auth';
 import { BaseController } from './index';
 import { authMiddleware } from '@src/middlewares/auth';
 
 @Controller('users')
-export class AuthController extends BaseController {
+export class UsersController extends BaseController {
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
     try {
