@@ -9,7 +9,8 @@
       "level": "info"
     },
     "auth": {
-      "key": "ENCRYPTION_DATA"
+      "key": "ENCRYPTION_DATA",
+      "tokenExpiresIn": "TOKEN_EXPIRES_IN"
     }
   }
 }
