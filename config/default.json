@@ -1,0 +1,12 @@
+{
+  "App": {
+    "port": 3333,
+    "database": {
+      "mongoUrl": "mongodb://localhost:27017/jobs"
+    },
+    "logger": {
+      "enabled": true,
+      "level": "info"
+    }
+  }
+}
