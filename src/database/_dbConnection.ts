@@ -1,18 +1,14 @@
-import dotenv from 'dotenv';
+import config, { IConfig } from 'config';
+import { connect as mongooseConnect, connection } from 'mongoose';
 
-import mongoose from 'mongoose';
-import logger from '../utils/logger';
+const dbConfig: IConfig = config.get('App.database');
 
-dotenv.config();
+import logger from '@src/utils/logger';
 
-const MONGODB_URL: string | undefined = process.env.MONGO_URL;
-
-async function main() {
-  await mongoose.connect(MONGODB_URL as string);
+export const connect = async (): Promise<void> => {
+  await mongooseConnect(dbConfig.get('mongoUrl'));
 
   logger.info('Connected to MongoDB Atlas');
-}
+};
 
-main().catch((err) => logger.error(err));
-
-export default mongoose;
+export const close = (): Promise<void> => connection.close();

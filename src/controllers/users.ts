@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 
 // Model
-import User from '@src/models/User';
+import { User } from '@src/models/User';
 
 // Middlewares
 

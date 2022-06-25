@@ -1,23 +1,58 @@
-import dotenv from 'dotenv';
-import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { Controller, Post, Get, Middleware } from '@overnightjs/core';
+import { Response, Request } from 'express';
+import { User } from '@src/models/User';
+import AuthService from '@src/services/auth';
+import { BaseController } from './index';
+import { authMiddleware } from '@src/middlewares/auth';
 
-dotenv.config();
+@Controller('users')
+export class AuthController extends BaseController {
+  @Post('')
+  public async create(req: Request, res: Response): Promise<void> {
+    try {
+      const user = new User(req.body);
+      const newUser = await user.save();
+      res.status(201).send(newUser);
+    } catch (error) {
+      this.sendCreateUpdateErrorResponse(res, error);
+    }
+  }
 
-// Model
-import User from '@src/models/User';
+  @Post('authenticate')
+  public async authenticate(req: Request, res: Response): Promise<Response> {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return this.sendErrorResponse(res, {
+        code: 401,
+        message: 'User not found!',
+        description: 'Try verifying your email address.',
+      });
+    }
+    if (
+      !(await AuthService.comparePasswords(req.body.password, user.password))
+    ) {
+      return this.sendErrorResponse(res, {
+        code: 401,
+        message: 'Password does not match!',
+      });
+    }
+    const token = AuthService.generateToken(user.id);
 
-// Middlewares
+    return res.send({ ...user.toJSON(), ...{ token } });
+  }
 
-class AuthController {
-  static register = async (req: Request, res: Response) => {
-    res.send('Register');
-  };
+  @Get('me')
+  @Middleware(authMiddleware)
+  public async me(req: Request, res: Response): Promise<Response> {
+    const userId = req.context?.userId;
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return this.sendErrorResponse(res, {
+        code: 404,
+        message: 'User not found!',
+      });
+    }
 
-  static login = async (req: Request, res: Response) => {
-    res.send('Login');
-  };
+    return res.send({ user });
+  }
 }
-
-export default AuthController;

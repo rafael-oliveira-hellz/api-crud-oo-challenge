@@ -1,12 +1,15 @@
 {
   "App": {
-    "port": 3333,
+    "port": "APP_PORT",
     "database": {
-      "mongoUrl": "mongodb://localhost:27017/jobs"
+      "mongoUrl": "MONGODB_URL"
     },
     "logger": {
       "enabled": true,
       "level": "info"
+    },
+    "auth": {
+      "key": "ENCRYPTION_DATA"
     }
   }
 }
