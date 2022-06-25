@@ -13,6 +13,10 @@ import authRouter from './routes/auth';
 import jobsRouter from './routes/jobs';
 import usersRouter from './routes/users';
 
+// Error Handlers
+// import notFound from '@src/middlewares/not-found';
+// import errorHandler from '@src/middlewares/error-handler';
+
 dotenv.config();
 
 class App {
@@ -22,6 +26,7 @@ class App {
     this.server = express();
     this.middlewares();
     this.routes();
+    this.setUpErrorHandlers();
   }
 
   middlewares() {
@@ -41,6 +46,11 @@ class App {
     //   swaggerUi.serve,
     //   swaggerUi.setup(swaggerFile)
     // );
+  }
+
+  setUpErrorHandlers(): void {
+    // this.server.use(notFound);
+    // this.server.use(errorHandler);
   }
 }
 
