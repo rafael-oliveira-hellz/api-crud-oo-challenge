@@ -6,7 +6,7 @@ const dbConfig: IConfig = config.get('App.database');
 
 export const connect = async (): Promise<void> => {
   await mongooseConnect(dbConfig.get('mongoUrl'));
-  
+
   logger.info(`Connected to ${dbConfig.get('mongoUrl')}`);
 };
 

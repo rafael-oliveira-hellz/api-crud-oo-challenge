@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node \"dist/src/index.js\"",
-    "start:dev": "ts-node-dev \"src/index.ts\"",
+    "dev": "nodemon \"src/index.ts\" | pino-pretty -c",
     "start:local": "dotenv -e .env -- ts-node-dev --transpile-only src/index.ts | pino-pretty -c",
     "test": "yarn lint && yarn style:check && yarn test:unit && yarn test:functional",
     "lint": "eslint ./src ./test --ext .ts",
@@ -46,6 +46,7 @@
     "is-typedarray": "^1.0.0",
     "jest": "^28.1.1",
     "nock": "^13.2.6",
+    "nodemon": "^2.0.18",
     "pino-pretty": "^8.0.0",
     "prettier": "^2.6.2",
     "supertest": "^6.2.3",
