@@ -1,18 +1,25 @@
 import './utils/module-alias';
+import 'express-async-errors';
 import { Server } from '@overnightjs/core';
 import { Application } from 'express';
 import bodyParser from 'body-parser';
 import * as http from 'http';
 import expressPino from 'express-pino-logger';
+import helmet from 'helmet';
 import cors from 'cors';
+import xss from 'xss-clean';
+import rateLimiter from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 import * as database from '@src/database';
 import { UsersController } from './controllers/auth';
 import logger from './logger';
-import apiSchema from './api-schema.json';
+// import apiSchema from './api-schema.json';
 import { apiErrorValidator } from './middlewares/api-error-validator';
+
+const swaggerDocument = YAML.load('./swagger.yaml');
 
 export class SetupServer extends Server {
   private server?: http.Server;
@@ -37,24 +44,37 @@ export class SetupServer extends Server {
   }
 
   private setupExpress(): void {
+    this.app.set('trust proxy', 1);
+    this.app.use(
+      rateLimiter({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 100, // limit each IP to 100 requests per windowMs
+      })
+    );
     this.app.use(bodyParser.json());
     this.app.use(
       expressPino({
         logger,
       })
     );
+
+    this.app.use(helmet());
     this.app.use(
       cors({
         origin: '*',
       })
     );
+    this.app.use(xss());
   }
 
   private async docsSetup(): Promise<void> {
-    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(apiSchema));
+    this.app.get('/', (req, res) => {
+      res.send('<h1>Jobs API</h1><a href="/docs">Documentation</a>');
+    });
+    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     this.app.use(
       OpenApiValidator.middleware({
-        apiSpec: apiSchema as OpenAPIV3.Document,
+        apiSpec: swaggerDocument as OpenAPIV3.Document,
         validateRequests: true,
         validateResponses: true,
       })
