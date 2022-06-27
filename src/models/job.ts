@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema, ObjectId } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface Job {
   _id?: string;
