@@ -10,7 +10,7 @@ import { Response, Request } from 'express';
 import { Job } from '@src/models/job';
 import { BaseController } from './index';
 import { authMiddleware } from '@src/middlewares/auth';
-import { User } from '../models/user';
+// import { User } from '@src/models/user';
 
 @Controller('jobs')
 export class JobsController extends BaseController {

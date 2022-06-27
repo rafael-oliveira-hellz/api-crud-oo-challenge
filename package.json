@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node \"dist/src/index.js\"",
-    "dev": "nodemon \"src/index.ts\" | pino-pretty -c",
-    "start:local": "dotenv -e .env -- ts-node-dev --transpile-only src/index.ts | pino-pretty -c",
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules \"src/index.ts\" | pino-pretty -c",
+    "start:local": "dotenv -e .env -- ts-node-dev --transpile-only --ignore-watch node_modules src/index.ts | pino-pretty -c",
     "test": "yarn lint && yarn style:check && yarn test:unit && yarn test:functional",
     "lint": "eslint ./src ./test --ext .ts",
     "lint:fix": "eslint ./src ./test --ext .ts --fix",
