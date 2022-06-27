@@ -8,6 +8,7 @@ import expressPino from 'express-pino-logger';
 import helmet from 'helmet';
 import cors from 'cors';
 import xss from 'xss-clean';
+import morgan from 'morgan';
 import rateLimiter from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
@@ -57,7 +58,7 @@ export class SetupServer extends Server {
         logger,
       })
     );
-
+    this.app.use(morgan('combined'));
     this.app.use(helmet());
     this.app.use(
       cors({
